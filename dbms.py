@@ -1,3 +1,4 @@
+#! /usr/bin/python
 import sqlite3
 conn=sqlite3.connect("Multimedia.db")
 cursor = conn.cursor()
@@ -14,8 +15,8 @@ def drop():
     cursor.execute('DROP TABLE IF EXISTS Anime')
     cursor.execute('DROP TABLE IF EXISTS animeMovies')#comment this when the database is once perfectly created because it deletes the information
 #for overwrighting everytime
-drop()
-create()
+#drop()
+#create()
 def close():
     conn.commit()
     cursor.close()
@@ -35,58 +36,62 @@ def AllMovie():
     movies = cursor.fetchall()
     for movie in movies:
         name,year,quality = movie
-        print(name,year,quality)       
+        print(name,'-',year,'-',quality)       
 def AllTvshow():
     cursor.execute("SELECT * FROM TVshows")
     shows = cursor.fetchall()
     for show in shows:
         name,year,quality = show
-        print(name,year,quality)
+        print(name,'-',year,'-',quality)
 def AllAnime():
     cursor.execute("SELECT * FROM Anime")
     Animes = cursor.fetchall()
     for Anime in Animes:
         name,alternate,year,quality = Anime
-        print(name,alternate,year,quality)
+        print(name,'-',alternate,'-',year,'-',quality)
 def AllAnimeMovie():
     cursor.execute("SELECT * FROM AnimeMovies")
     AnimeMovies = cursor.fetchall()
     for AnimeMovie in AnimeMovies:
         name,Alternate,year,quality = AnimeMovie
-        print(name,Alternate,year,quality)
+        print(name,'-',Alternate,'-',year,'-',quality)
 #columns
-def MovieNames():
+def Movielist():
     cursor.execute("Select Name FROM Movies")
-    movieNames = cursor.fetchall()
+    movies = cursor.fetchall()
+    movieNames=list((str(elements).strip()[2:-3]+'' for elements in movies))
     return movieNames
-def TSNames():
+def TSlist():
     cursor.execute("Select Name FROM TVshows")
     TvshowNames = cursor.fetchall()
+    TvshowNames=list((str(elements).strip()[2:-3]+'' for elements in TvshowNames))
     return TvshowNames
-def AnimeNames():
+def Animelist():
     cursor.execute("Select Name FROM Anime")
     AnimeNames = cursor.fetchall()
     return AnimeNames
-def AmNames():
+def Amlist():
     cursor.execute("Select Name FROM AnimeMovies")
-    AnimeNames = cursor.fetchall()
-    return AnimeNames
-# add_movie("Maanadu",2021,720)
-# add_movie("Maandu",2021,720)
-# add_AnimeMovie("yedo onnu","Therliye",2020,1080)
-# add_AnimeMovie("yedo onu","Therliye",2020,1080)
-# add_anime("death note","no",2016,1080)
-# add_anime("death not","no",2016,1080)
-# add_ts("Money heist",2020,1080)
-# add_ts("Mony heist",2020,1080)
-# AllMovie()
-# AllTvshow()
-# AllAnime()
-# AllAnimeMovie()
-# x=MovieNames()
-# y=TSNames()
-# z=AnimeNames()
-# w=AmNames()
-# print(x,y,z,w)
-#delete_movies()
+    Animemovies = cursor.fetchall()
+    return Animemovies
+def searchMovie(Name):
+    movielist = Movielist()
+    for movie in movielist:
+        if movie == Name:
+            index= movielist.index(movie)
+            print(index)
+            cursor.execute("Select * FROM Movies")
+            info = cursor.fetchall()[index]
+            print(info)
+        elif movie.startswith(Name[0]):
+            index = movielist.index(movie)
+            cursor.execute("Select * FROM Movies")
+            info = cursor.fetchall()[index]
+        elif movie.endswith(Name[len(Name)-1]):
+            index = movielist.index(movie)
+            cursor.execute("Select * FROM Movies")
+            info = cursor.fetchall()[index]
+            print(info)       
+
+
 
